@@ -9,10 +9,12 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import InputBase from "../components/InputBase";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
+
+// Importar Firebase Auth
+import auth from '@react-native-firebase/auth';
 
 const EntrarMovil = () => {
   const navigation = useNavigation();
@@ -27,25 +29,22 @@ const EntrarMovil = () => {
     }
 
     try {
-      const response = await axios.post('http://10.0.2.2:5000/api/users/login', {
-        correo,
-        contraseña,
-      });
-
-      if (response.status === 200) {
-        Alert.alert('Inicio de sesión exitoso');
-        // Navegar a la pantalla principal de la aplicación
-        navigation.navigate('Home'); // Asegúrate de que 'Home' está definida en tu stack de navegación
-      } else {
-        Alert.alert('Error', 'Credenciales inválidas');
-      }
+      // Iniciar sesión con Firebase Auth
+      await auth().signInWithEmailAndPassword(correo, contraseña);
+      Alert.alert('Inicio de sesión exitoso');
+      // Navegar a la pantalla principal de la aplicación
+      navigation.navigate('Home'); // Asegúrate de que 'Home' esté definida en tu stack de navegación
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.message) {
-        Alert.alert('Error', error.response.data.message);
+      if (error.code === 'auth/user-not-found') {
+        Alert.alert('Error', 'Usuario no encontrado.');
+      } else if (error.code === 'auth/wrong-password') {
+        Alert.alert('Error', 'Contraseña incorrecta.');
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert('Error', 'Correo electrónico inválido.');
       } else {
         Alert.alert('Error', 'No se pudo iniciar sesión');
+        console.error(error);
       }
-      console.error(error);
     }
   };
 
