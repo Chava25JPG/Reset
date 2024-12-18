@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "246084948942",
+    "firebase_url": "https://reset-a76cb-default-rtdb.firebaseio.com",
+    "project_id": "reset-a76cb",
+    "storage_bucket": "reset-a76cb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246084948942:android:b16e5c2f18efd11c99919f",
+        "android_client_info": {
+          "package_name": "com.reset"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_xSIOmnT0kskbLxqleTHONef0nqdsPtU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
