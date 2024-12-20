@@ -83,14 +83,7 @@ const CabeceraMobile = ({
           </View>
         </View>
       </View>
-      <View style={[styles.horaWifi, styles.horaWifiFlexBox]}>
-        <Text style={styles.hora}>{hora}</Text>
-        <Image
-          style={styles.containerIcon}
-          resizeMode="cover"
-          source={container}
-        />
-      </View>
+      
     </View>
   );
 };
@@ -176,7 +169,7 @@ const styles = StyleSheet.create({
   },
   topAppBar: {
     height: "40.76%",
-    top: "22.93%",
+    top: "0%",
     bottom: "36.31%",
     backgroundColor: Color.grayBlack,
     paddingVertical: Padding.p_5xs,

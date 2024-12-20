@@ -1,9 +1,19 @@
-import * as React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import CabeceraMobile from "../components/CabeceraMobile";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
+import { useRoute, useNavigation } from "@react-navigation/native";
 
 const Reserva = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { category, service } = route.params || {};
+
+  const handleReserve = () => {
+    // Navegar a DuracionMasaje pasando el servicio
+    navigation.navigate("DuracionMasaje", { category, service });
+  };
+
   return (
     <View style={styles.reserva}>
       <Image
@@ -11,8 +21,7 @@ const Reserva = () => {
         resizeMode="cover"
         source={require("../assets/openmojireturnbackbutton.png")}
       />
-      <Text style={styles.momentoRelajante}>{`Momento
-Relajante`}</Text>
+      <Text style={styles.momentoRelajante}>{service?.title || "Servicio"}</Text>
       <Image
         style={[styles.untitledDesign61, styles.reservaChildPosition]}
         resizeMode="cover"
@@ -20,7 +29,7 @@ Relajante`}</Text>
       />
       <View style={[styles.reservaChild, styles.reservaChildPosition]} />
       <Text style={styles.minutosDeMasaje}>
-        45’ Minutos de masaje relajante o con piedras calientes
+        Selecciona opciones para tu reserva
       </Text>
       <Image
         style={styles.reservaItem}
@@ -28,46 +37,14 @@ Relajante`}</Text>
         source={require("../assets/line-1.png")}
       />
       <View style={styles.reservaTuCitaWrapper}>
-        <Text style={styles.reservaTuCita}>{`Reserva tu cita `}</Text>
+        <TouchableOpacity onPress={handleReserve}>
+          <Text style={styles.reservaTuCita}>Reserva tu cita</Text>
+        </TouchableOpacity>
       </View>
-      <Image
-        style={[styles.iconlylightOutlinetimeCirc, styles.iconlylightLayout]}
-        resizeMode="cover"
-        source={require("../assets/iconlylightoutlinetimecircle.png")}
-      />
-      <Text
-        style={[styles.tratamientoFacialPersonaliza, styles.cavaYBombonesTypo]}
-      >
-        Tratamiento facial personalizado
-      </Text>
-      <Text style={[styles.minutosDeJacuzzi, styles.cavaYBombonesTypo]}>
-        20’ Minutos de Jacuzzi privado
-      </Text>
-      <Text style={[styles.cavaYBombones, styles.cavaYBombonesTypo]}>
-        Cava y bombones
-      </Text>
-      <Image
-        style={[styles.profileIcon, styles.iconlylightLayout]}
-        resizeMode="cover"
-        source={require("../assets/profile1.png")}
-      />
-      <Image
-        style={[styles.iconlylightOutlinestar, styles.iconlylightLayout]}
-        resizeMode="cover"
-        source={require("../assets/iconlylightoutlinestar1.png")}
-      />
-      <Image
-        style={styles.antDesigngiftOutlinedIcon}
-        resizeMode="cover"
-        source={require("../assets/antdesigngiftoutlined1.png")}
-      />
       <CabeceraMobile
         icon={require("../assets/icon4.png")}
         hora="09:41"
         container={require("../assets/container2.png")}
-        cabeceraMobileMarginLeft={-207}
-        cabeceraMobileLeft="50%"
-        cabeceraMobileMarginTop="unset"
       />
     </View>
   );
@@ -77,23 +54,6 @@ const styles = StyleSheet.create({
   reservaChildPosition: {
     width: 323,
     left: 46,
-    position: "absolute",
-  },
-  iconlylightLayout: {
-    maxHeight: "100%",
-    maxWidth: "100%",
-    position: "absolute",
-    overflow: "hidden",
-  },
-  cavaYBombonesTypo: {
-    left: 118,
-    alignItems: "center",
-    display: "flex",
-    textAlign: "left",
-    fontSize: FontSize.bodyRegular_size,
-    color: Color.grayBlack,
-    fontFamily: FontFamily.robotoBold,
-    fontWeight: "700",
     position: "absolute",
   },
   openmojireturnBackButtonIcon: {
@@ -155,16 +115,6 @@ const styles = StyleSheet.create({
     height: 0,
     position: "absolute",
   },
-  reservaTuCita: {
-    top: 7,
-    color: Color.colorSnow,
-    fontSize: FontSize.bodyRegular_size,
-    left: 46,
-    textAlign: "center",
-    fontFamily: FontFamily.robotoBold,
-    fontWeight: "700",
-    position: "absolute",
-  },
   reservaTuCitaWrapper: {
     top: 764,
     left: 107,
@@ -173,52 +123,15 @@ const styles = StyleSheet.create({
     width: 200,
     height: 33,
     position: "absolute",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  iconlylightOutlinetimeCirc: {
-    top: "54.91%",
-    right: "75.36%",
-    bottom: "41.74%",
-    left: "17.39%",
-    width: "7.25%",
-    height: "3.35%",
-    maxWidth: "100%",
-  },
-  tratamientoFacialPersonaliza: {
-    top: 588,
-    width: 248,
-  },
-  minutosDeJacuzzi: {
-    top: 652,
-    width: 231,
-  },
-  cavaYBombones: {
-    top: 708,
-    width: 231,
-  },
-  profileIcon: {
-    height: "3.13%",
-    width: "5.8%",
-    top: "64.84%",
-    right: "76.33%",
-    bottom: "32.03%",
-    left: "17.87%",
-  },
-  iconlylightOutlinestar: {
-    top: "71.65%",
-    right: "75.85%",
-    bottom: "25%",
-    left: "16.91%",
-    width: "7.25%",
-    height: "3.35%",
-    maxWidth: "100%",
-  },
-  antDesigngiftOutlinedIcon: {
-    top: 698,
-    left: 70,
-    width: 30,
-    height: 30,
-    position: "absolute",
-    overflow: "hidden",
+  reservaTuCita: {
+    color: Color.colorSnow,
+    fontSize: FontSize.bodyRegular_size,
+    textAlign: "center",
+    fontFamily: FontFamily.robotoBold,
+    fontWeight: "700",
   },
   reserva: {
     shadowColor: "rgba(0, 0, 0, 0.07)",
@@ -228,7 +141,7 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 80,
     elevation: 80,
-    borderRadius: Border.br_11xl,
+    borderRadius: 0,
     backgroundColor: Color.grayWhite,
     flex: 1,
     width: "100%",

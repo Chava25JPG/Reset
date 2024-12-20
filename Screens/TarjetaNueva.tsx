@@ -7,6 +7,11 @@ import { Border, Color } from "../GlobalStyles";
 const TarjetaNueva = () => {
   return (
     <View style={styles.tarjetaNueva}>
+      <CabeceraMobile
+        icon={require("../assets/icon4.png")}
+        hora="09:41"
+        container={require("../assets/container.png")}
+      />
       <Image
         style={styles.imagenDeWhatsapp20240909}
         resizeMode="cover"
@@ -31,14 +36,6 @@ const TarjetaNueva = () => {
         style={[styles.image3Icon, styles.iconLayout]}
         resizeMode="cover"
         source={require("../assets/image-3.png")}
-      />
-      <CabeceraMobile
-        icon={require("../assets/icon4.png")}
-        hora="09:41"
-        container={require("../assets/container.png")}
-        cabeceraMobileMarginLeft={-207}
-        cabeceraMobileLeft="50%"
-        cabeceraMobileMarginTop="unset"
       />
     </View>
   );
@@ -74,20 +71,17 @@ const styles = StyleSheet.create({
     left: 162,
   },
   tarjetaNueva: {
-    shadowColor: "rgba(0, 0, 0, 0.07)",
-    shadowOffset: {
-      width: 0,
-      height: 100,
-    },
-    shadowRadius: 80,
-    elevation: 80,
-    shadowOpacity: 1,
-    borderRadius: Border.br_11xl,
-    backgroundColor: Color.grayWhite,
-    flex: 1,
-    width: "100%",
-    height: 896,
-    overflow: "hidden",
+    shadowColor: "rgba(0,0,0,0.07)",
+    shadowOffset:{width:0,height:100},
+    shadowRadius:80,
+    elevation:80,
+    shadowOpacity:1,
+    borderRadius:Border.br_11xl,
+    backgroundColor:Color.grayWhite,
+    flex:1,
+    width:"100%",
+    height:896,
+    overflow:"hidden"
   },
 });
 

@@ -1,5 +1,6 @@
 import * as React from "react";
-import { StyleSheet, View, ScrollView, Image } from "react-native";
+import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import Component from "../components/Component";
 import FrameComponent from "../components/FrameComponent";
 import FrameComponent1 from "../components/FrameComponent1";
@@ -8,18 +9,44 @@ import CabeceraMobile from "../components/CabeceraMobile";
 import { Padding, Border, Color } from "../GlobalStyles";
 
 const Servicios = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { category } = route.params || {};
+
+  // Servicios simulados
+  const serviciosData = [
+    { title: "Masaje con pindas", price: "$55" },
+    { title: "Masaje geotermal", price: "$60" },
+    { title: "Masaje podal", price: "$45" },
+    { title: "Masaje descontracturante", price: "$55" },
+    { title: "Masaje lomi lomi", price: "$55" },
+    { title: "Masaje relajante", price: "$50" },
+    { title: "Moment relax", price: "$110" },
+    { title: "Masaje craneo facial", price: "$35" },
+    { title: "Masaje cuatro manos", price: "$55" },
+  ];
+
+  const handleServicePress = (service) => {
+    navigation.navigate("Reserva", { category, service });
+  };
+
   return (
     <View style={[styles.servicios, styles.serviciosShadowBox]}>
-      <View style={[styles.component3Wrapper, styles.serviciosShadowBox]}>
+      <CabeceraMobile
+        icon={require("../assets/icon4.png")}
+        hora="09:41"
+        container={require("../assets/container2.png")}
+      />
+
+      <View style={styles.searchContainer}>
         <Component />
       </View>
-      <FrameComponent />
-      <FrameComponent1 />
-      <Image
-        style={styles.akarIconsmoreHorizontal}
-        resizeMode="cover"
-        source={require("../assets/akariconsmorehorizontal.png")}
-      />
+
+      <View style={styles.framesContainer}>
+        <FrameComponent />
+        <FrameComponent1 />
+      </View>
+
       <View style={[styles.dropdownTrigger, styles.dropdownFlexBox]}>
         <Button1
           iconOnly={false}
@@ -34,21 +61,21 @@ const Servicios = () => {
           buttonAlignSelf="unset"
         />
         <View style={[styles.dropdownToggle, styles.dropdownFlexBox]}>
-          <Image
-            style={styles.icon}
-            resizeMode="cover"
-            source={require("../assets/icon7.png")}
-          />
+          <Text style={styles.categoryText}>{category || "Categoría"}</Text>
         </View>
       </View>
-      <CabeceraMobile
-        icon={require("../assets/icon4.png")}
-        hora="09:41"
-        container={require("../assets/container2.png")}
-        cabeceraMobileMarginLeft={-207}
-        cabeceraMobileLeft="50%"
-        cabeceraMobileMarginTop="unset"
-      />
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.servicesGrid}>
+          {serviciosData.map((item, index) => (
+            <TouchableOpacity key={index} style={styles.serviceCard} onPress={() => handleServicePress(item)}>
+              <View style={styles.placeholderImage} />
+              <Text style={styles.serviceTitle}>{item.title}</Text>
+              <Text style={styles.servicePrice}>{item.price}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -68,50 +95,78 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  component3Wrapper: {
-    top: 223,
-    left: 10,
-    padding: Padding.p_3xs,
-    position: "absolute",
-  },
-  akarIconsmoreHorizontal: {
-    top: 813,
-    left: 168,
-    width: 72,
-    height: 72,
-    position: "absolute",
-  },
-  icon: {
-    width: 12,
-    height: 12,
+  servicios: {
+    borderRadius: 0,
+    backgroundColor: Color.grayWhite,
+    flex: 1,
+    width: "100%",
+    height: "100%",
     overflow: "hidden",
   },
+  searchContainer: {
+    paddingTop: 20,
+    paddingHorizontal: 20,
+  },
+  framesContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  dropdownTrigger: {
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
   dropdownToggle: {
-    alignSelf: "stretch",
     borderTopRightRadius: Border.br_8xs_8,
     borderBottomRightRadius: Border.br_8xs_8,
     backgroundColor: Color.yellow600,
-    borderStyle: "solid",
     borderColor: Color.yellow600,
     borderWidth: 1,
     justifyContent: "center",
     paddingHorizontal: Padding.p_xs,
     paddingVertical: Padding.p_5xs,
-    overflow: "hidden",
+    marginLeft: 10,
   },
-  dropdownTrigger: {
-    marginLeft: -78,
-    top: 166,
-    left: "50%",
-    position: "absolute",
+  categoryText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#000",
   },
-  servicios: {
-    borderRadius: Border.br_11xl,
-    backgroundColor: Color.grayWhite,
-    flex: 1,
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 50,
+  },
+  servicesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  serviceCard: {
+    width: "30%",
+    borderRadius: 10,
+    backgroundColor: "rgba(219, 219, 219, 0.1)",
+    marginBottom: 20,
+    alignItems: "center",
+    padding: 10,
+    elevation: 4,
+  },
+  placeholderImage: {
     width: "100%",
-    height: 896,
-    overflow: "hidden",
+    height: 80,
+    borderRadius: 10,
+    backgroundColor: "#ddd",
+    marginBottom: 8,
+  },
+  serviceTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: 4,
+    color: "#000",
+  },
+  servicePrice: {
+    fontSize: 14,
+    color: "#333",
   },
 });
 

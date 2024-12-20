@@ -1,26 +1,40 @@
 import * as React from "react";
-import { Text, StyleSheet, View, Image } from "react-native";
+import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import CabeceraMobile from "../components/CabeceraMobile";
 import { Color, Border, FontSize, FontFamily } from "../GlobalStyles";
+import { useNavigation } from "@react-navigation/native";
 
 const Inicio = () => {
+  const navigation = useNavigation();
+
+  const handleCategoryPress = (category) => {
+    navigation.navigate("Servicios", { category });
+  };
+
   return (
     <View style={styles.inicio}>
       <Text style={styles.categoras}>Categorías</Text>
       <View style={[styles.categorias, styles.categoriasPosition]}>
         <View style={styles.groupParent}>
-          <View style={[styles.rectangleParent, styles.groupParentShadowBox]}>
+          <TouchableOpacity
+            style={[styles.rectangleContainer, styles.groupParentShadowBox]}
+            onPress={() => handleCategoryPress("Bambú")}
+          >
             <View style={[styles.groupChild, styles.groupChildPosition]} />
-            <Text style={[styles.prenatal, styles.prenatalLayout]}>
-              Prenatal
+            <Text style={[styles.bamb, styles.imageGroupSpaceBlock]}>
+              Bambú
             </Text>
             <Image
-              style={[styles.outputOnlinepngtools21Icon, styles.iconPosition]}
+              style={[styles.outputOnlinepngtools21, styles.iconPosition]}
               resizeMode="cover"
-              source={require("../assets/outputonlinepngtools2-1.png")}
+              source={require("../assets/outputonlinepngtools-2-1.png")}
             />
-          </View>
-          <View style={[styles.rectangleGroup, styles.imageGroupSpaceBlock]}>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.rectangleGroup, styles.imageGroupSpaceBlock]}
+            onPress={() => handleCategoryPress("Ventosas")}
+          >
             <View style={[styles.groupItem, styles.imageGroupSpaceBlock]} />
             <Text style={[styles.prenatal, styles.prenatalLayout]}>
               Ventosas
@@ -30,34 +44,44 @@ const Inicio = () => {
               resizeMode="cover"
               source={require("../assets/outputonlinepngtools-3-1.png")}
             />
-          </View>
-          <View
-            style={[styles.rectangleContainer, styles.groupParentShadowBox]}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.rectangleParent, styles.groupParentShadowBox]}
+            onPress={() => handleCategoryPress("Prenatal")}
           >
             <View style={[styles.groupChild, styles.groupChildPosition]} />
-            <Text
-              style={[styles.bamb, styles.imageGroupSpaceBlock]}
-            >{`Bambú `}</Text>
-            <Image
-              style={[styles.outputOnlinepngtools21, styles.iconPosition]}
-              resizeMode="cover"
-              source={require("../assets/outputonlinepngtools-2-1.png")}
-            />
-          </View>
-        </View>
-        <View style={[styles.groupContainer, styles.parentGroupPosition]}>
-          <View style={[styles.groupView, styles.groupParentShadowBox]}>
-            <View style={[styles.groupChild, styles.groupChildPosition]} />
-            <Text style={[styles.deportivo, styles.deportivoTypo]}>
-              Deportivo
+            <Text style={[styles.prenatal, styles.prenatalLayout]}>
+              Prenatal
             </Text>
             <Image
-              style={[styles.outputOnlinepngtools1Icon, styles.iconPosition]}
+              style={[styles.outputOnlinepngtools21Icon, styles.iconPosition]}
               resizeMode="cover"
-              source={require("../assets/outputonlinepngtools-1.png")}
+              source={require("../assets/outputonlinepngtools2-1.png")}
             />
-          </View>
-          <View style={[styles.imageParent, styles.imageGroupSpaceBlock]}>
+          </TouchableOpacity>
+        </View>
+
+        <View style={[styles.groupContainer, styles.parentGroupPosition]}>
+          <TouchableOpacity
+            style={[styles.rectangleParent1, styles.parentGroupPosition]}
+            onPress={() => handleCategoryPress("Descontracturante")}
+          >
+            <View style={[styles.groupChild1, styles.groupChildPosition]} />
+            <Text style={[styles.descontracturante, styles.imageGroupSpaceBlock]}>
+              Descontracturante
+            </Text>
+            <Image
+              style={[styles.relax1Icon, styles.iconPosition]}
+              resizeMode="cover"
+              source={require("../assets/relax-1.png")}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.imageParent, styles.imageGroupSpaceBlock]}
+            onPress={() => handleCategoryPress("Relajante")}
+          >
             <View style={[styles.image, styles.imageGroupSpaceBlock]} />
             <Text style={[styles.relajante, styles.deportivoTypo]}>
               Relajante
@@ -67,20 +91,22 @@ const Inicio = () => {
               resizeMode="cover"
               source={require("../assets/outputonlinepngtools-1-1.png")}
             />
-          </View>
-          <View style={[styles.rectangleParent1, styles.parentGroupPosition]}>
-            <View style={[styles.groupChild1, styles.groupChildPosition]} />
-            <Text
-              style={[styles.descontracturante, styles.imageGroupSpaceBlock]}
-            >
-              Descontracturante
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.groupView, styles.groupParentShadowBox]}
+            onPress={() => handleCategoryPress("Deportivo")}
+          >
+            <View style={[styles.groupChild, styles.groupChildPosition]} />
+            <Text style={[styles.deportivo, styles.deportivoTypo]}>
+              Deportivo
             </Text>
             <Image
-              style={[styles.relax1Icon, styles.iconPosition]}
+              style={[styles.outputOnlinepngtools1Icon, styles.iconPosition]}
               resizeMode="cover"
-              source={require("../assets/relax-1.png")}
+              source={require("../assets/outputonlinepngtools-1.png")}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
       <Image
@@ -184,12 +210,6 @@ const styles = StyleSheet.create({
   rectangleParent: {
     width: 120,
     left: 266,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
     top: 0,
     height: 120,
     position: "absolute",
@@ -259,12 +279,6 @@ const styles = StyleSheet.create({
   groupView: {
     width: 120,
     left: 266,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
     top: 0,
     height: 120,
     position: "absolute",
@@ -361,7 +375,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 896,
     overflow: "hidden",
-    borderRadius: Border.br_11xl,
+    borderRadius: 0,
     shadowOpacity: 1,
   },
 });
