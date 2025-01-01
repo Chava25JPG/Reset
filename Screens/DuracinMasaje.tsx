@@ -72,7 +72,6 @@ const DuracinMasaje = () => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.fechaYHora}>FECHA Y HORA</Text>
       <Text style={styles.gneroDelTerapeuta}>GÉNERO DEL TERAPEUTA</Text>
 
       {/* Selección de género */}
@@ -110,7 +109,6 @@ const styles = StyleSheet.create({
     backgroundColor: Color.grayWhite,
     shadowOpacity: 1,
     alignItems: 'center',
-    paddingTop: 150
   },
   textCenter: {
     textAlign: 'center'

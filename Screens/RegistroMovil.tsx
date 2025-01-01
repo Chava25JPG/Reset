@@ -10,20 +10,13 @@ import {
   ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-// Importaciones de Firebase
 import firestore from '@react-native-firebase/firestore';
-// Si usas Firebase Auth
-import auth from '@react-native-firebase/auth'; // Asegúrate de tener este paquete instalado
-
-// Importaciones de componentes personalizados y estilos
-import Buttonmediumprimarytruenor from '../components/Buttonmediumprimarytruenor'; // Botón de Google
+import auth from '@react-native-firebase/auth';
 import { FontFamily, Color, Border, FontSize } from '../GlobalStyles';
 
 const RegistroMovil = () => {
-  const navigation = useNavigation(); // Hook para la navegación
+  const navigation = useNavigation();
 
-  // Estados para los campos del formulario
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [usuario, setUsuario] = useState('');
@@ -32,20 +25,16 @@ const RegistroMovil = () => {
   const [telefono, setTelefono] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
 
-  // Función para manejar el registro
   const handleRegister = async () => {
-    // Validar que todos los campos requeridos estén llenos
     if (!nombre || !apellido || !usuario || !correo || !contraseña || !telefono) {
       Alert.alert('Error', 'Por favor, completa todos los campos.');
       return;
     }
 
     try {
-      // Registrar usuario con Firebase Authentication
       const userCredential = await auth().createUserWithEmailAndPassword(correo, contraseña);
       const currentUser = userCredential.user;
 
-      // Agregar información adicional del usuario a Firestore
       await firestore().collection('usuarios').doc(currentUser.uid).set({
         nombre,
         apellido,
@@ -57,7 +46,6 @@ const RegistroMovil = () => {
       });
 
       Alert.alert('Registro exitoso', 'Usuario registrado correctamente.');
-      // Navegar a la pantalla de bienvenida
       navigation.navigate('Bienvenida');
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
@@ -76,50 +64,46 @@ const RegistroMovil = () => {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.registroMovil}>
-        {/* Imagen de fondo */}
         <Image
-          style={styles.icon}
+          style={styles.backgroundImage}
           resizeMode="cover"
           source={require('../assets/9145354-1.png')}
         />
-        <View style={styles.registroMovilChild} />
 
-        {/* Logo */}
-        <Image
-          style={styles.logo1Icon}
-          resizeMode="contain"
-          source={require('../assets/logo-11.png')}
-        />
+        {/* Tarjeta semi-transparente */}
+        <View style={styles.overlayCard}>
+          <Image
+            style={styles.logo}
+            resizeMode="contain"
+            source={require('../assets/logo-11.png')}
+          />
 
-        {/* Contenido Principal */}
-        <View style={styles.mainContent}>
-          <View style={styles.bienvenidoAResetParent}>
-            <Text style={styles.bienvenidoAResetContainer}>
-              <Text style={styles.bienvenidoA}>{`Bienvenido a `}</Text>
-              <Text style={styles.reset}>RESET</Text>
-            </Text>
-            <View style={styles.noTieneCuentaContainer}>
-              <Text style={styles.noTieneCuenta}>{`¿No tienes cuenta? `}</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text style={styles.registrarse}>Entrar</Text>
-              </TouchableOpacity>
-            </View>
+          <Text style={styles.bienvenidoAReset}>
+            Bienvenido a <Text style={styles.highlightText}>RESET</Text>
+          </Text>
+          <View style={styles.tienesCuentaContainer}>
+            <Text style={styles.textGray}>¿No tienes cuenta? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('EntrarMovil')}>
+              <Text style={styles.linkText}>Entrar</Text>
+            </TouchableOpacity>
           </View>
 
-          <Text style={[styles.registro, styles.registroTypo]}>Registro</Text>
+          <Text style={styles.titulo}>Registro</Text>
 
-          {/* Formulario de Registro */}
+          {/* Formulario */}
           <View style={styles.formContainer}>
             <View style={styles.inputRow}>
               <TextInput
                 style={styles.input}
                 placeholder="Nombre"
+                placeholderTextColor="#666"
                 value={nombre}
                 onChangeText={setNombre}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Apellido"
+                placeholderTextColor="#666"
                 value={apellido}
                 onChangeText={setApellido}
               />
@@ -128,12 +112,14 @@ const RegistroMovil = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Usuario"
+                placeholderTextColor="#666"
                 value={usuario}
                 onChangeText={setUsuario}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Correo"
+                placeholderTextColor="#666"
                 value={correo}
                 onChangeText={setCorreo}
                 keyboardType="email-address"
@@ -143,6 +129,7 @@ const RegistroMovil = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Contraseña"
+                placeholderTextColor="#666"
                 value={contraseña}
                 onChangeText={setContraseña}
                 secureTextEntry
@@ -150,39 +137,36 @@ const RegistroMovil = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Teléfono"
+                placeholderTextColor="#666"
                 value={telefono}
                 onChangeText={setTelefono}
                 keyboardType="phone-pad"
               />
             </View>
-            <View style={styles.inputRow}>
-              <TextInput
-                style={[styles.input, styles.fullWidthInput]}
-                placeholder="WhatsApp"
-                value={whatsapp}
-                onChangeText={setWhatsapp}
-                keyboardType="phone-pad"
-              />
-            </View>
+            <TextInput
+              style={[styles.input, {width:'100%'}]}
+              placeholder="WhatsApp"
+              placeholderTextColor="#666"
+              value={whatsapp}
+              onChangeText={setWhatsapp}
+              keyboardType="phone-pad"
+            />
 
-            {/* Botón de Registro */}
             <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
               <Text style={styles.registerButtonText}>Registrar</Text>
             </TouchableOpacity>
 
-            {/* Botón de Google */}
-            <View style={styles.googleButtonContainer}>
-              <Buttonmediumprimarytruenor />
-            </View>
+            {/* Botón de Google (Si lo requieres) */}
+            <TouchableOpacity style={styles.googleButton}>
+              <Text style={styles.googleButtonText}>G</Text>
+            </TouchableOpacity>
           </View>
 
-          {/* Texto de Política de Privacidad y Términos de Uso */}
-          <Text style={[styles.entrar, styles.registroTypo]}>
-            <Text style={styles.alIniciarSesion}>{`Al iniciar sesión o registrarte, aceptas la `}</Text>
-            <Text style={styles.politicaDePrivacidad}>Política de privacidad</Text>
-            <Text style={styles.alIniciarSesion}>{` y los `}</Text>
-            <Text style={styles.politicaDePrivacidad}>Términos de uso </Text>
-            <Text style={styles.alIniciarSesion}>de RESET.</Text>
+          <Text style={styles.footerText}>
+            Al iniciar sesión o registrarte, aceptas la{" "}
+            <Text style={styles.linkText}>Política de privacidad</Text>
+            {" "}y los{" "}
+            <Text style={styles.linkText}>Términos de uso</Text>{" "}de RESET.
           </Text>
         </View>
       </View>
@@ -200,124 +184,107 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Color.grayWhite,
   },
-  icon: {
+  backgroundImage: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
-    top: 0,
-    left: 0,
+    width:'100%',
+    height:'100%',
+    top:0,
+    left:0
   },
-  registroMovilChild: {
-    position: 'absolute',
-    top: 88,
-    borderRadius: Border.br_21xl,
-    backgroundColor: Color.colorGray_200,
-    width: 379,
-    height: 709,
-    left: '50%',
-    transform: [{ translateX: -379 / 2 }],
+  overlayCard: {
+    marginTop: 100,
+    marginHorizontal: 20,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    borderRadius: 25,
+    alignItems: "center",
+    paddingVertical: 40,
+    paddingHorizontal: 20
   },
-  logo1Icon: {
-    width: 135,
-    height: 135,
-    marginTop: 127,
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20
   },
-  mainContent: {
-    width: '90%',
-    alignItems: 'center',
-  },
-  bienvenidoAResetParent: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  bienvenidoAResetContainer: {
+  bienvenidoAReset: {
     fontSize: FontSize.bodyRegular_size,
-    textAlign: 'center',
-    fontFamily: FontFamily.poppinsRegular,
+    textAlign:'center',
+    fontFamily: FontFamily.robotoBold,
+    fontWeight:"700",
+    marginBottom:10,
+    color:Color.grayBlack
   },
-  bienvenidoA: {
-    color: Color.grayBlack,
+  highlightText: {
+    color: '#779341'
   },
-  reset: {
-    fontWeight: '600',
-    fontFamily: FontFamily.poppinsSemiBold,
-    color: Color.colorOlivedrab,
+  tienesCuentaContainer: {
+    flexDirection:'row',
+    alignItems:'center',
+    marginBottom:20
   },
-  noTieneCuentaContainer: {
-    flexDirection: 'row',
-    marginTop: 10,
+  textGray: {
+    color:'#8d8d8d'
   },
-  noTieneCuenta: {
-    color: '#8d8d8d',
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_smi,
+  linkText: {
+    color:'#779341',
+    textDecorationLine:'underline'
   },
-  registrarse: {
-    color: Color.colorOlivedrab,
-    fontFamily: FontFamily.poppinsSemiBold,
-    fontSize: FontSize.size_smi,
-    textDecorationLine: 'underline',
-  },
-  registro: {
-    fontSize: 40,
-    color: Color.grayBlack,
-    textAlign: 'center',
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: '500',
-    marginTop: 20,
-  },
-  registroTypo: {
-    fontFamily: FontFamily.poppinsRegular,
+  titulo: {
+    fontSize:30,
+    color:Color.grayBlack,
+    fontFamily:FontFamily.robotoBold,
+    fontWeight:'700',
+    marginBottom:30,
+    textAlign:'center'
   },
   formContainer: {
-    width: '100%',
-    marginTop: 20,
+    width:'100%'
   },
   inputRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection:'row',
+    justifyContent:'space-between'
   },
   input: {
-    width: '48%',
-    height: 50,
-    backgroundColor: '#FFF',
-    borderColor: '#CCC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-  },
-  fullWidthInput: {
-    width: '100%',
+    backgroundColor:'#FFF',
+    borderColor:'#CCC',
+    borderWidth:1,
+    borderRadius:8,
+    height:50,
+    marginBottom:15,
+    paddingHorizontal:10,
+    color:'#000',
+    width:'48%'
   },
   registerButton: {
-    backgroundColor: '#779341',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
+    backgroundColor:'#779341',
+    paddingVertical:15,
+    borderRadius:8,
+    alignItems:'center',
+    marginTop:10
   },
-  registerButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
+  registerButtonText:{
+    color:'#FFF',
+    fontSize:16,
+    fontWeight:'bold'
   },
-  googleButtonContainer: {
-    marginTop: 20,
-    width: '100%',
+  googleButton:{
+    marginTop:20,
+    borderWidth:1,
+    borderColor:'#999',
+    borderRadius:8,
+    paddingVertical:10,
+    alignItems:'center'
   },
-  entrar: {
+  googleButtonText:{
+    fontSize:20,
+    fontWeight:'bold',
+    color:'#666'
+  },
+  footerText:{
     fontSize: FontSize.bodySmall_size,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  alIniciarSesion: {
-    color: Color.grayBlack,
-  },
-  politicaDePrivacidad: {
-    color: Color.colorOlive,
-    textDecorationLine: 'underline',
-  },
+    textAlign:'center',
+    marginTop:20,
+    color:Color.grayBlack
+  }
 });
 
 export default RegistroMovil;

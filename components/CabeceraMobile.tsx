@@ -1,213 +1,247 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
+  TextInput,
   Text,
   StyleSheet,
   View,
   Image,
   ImageSourcePropType,
+  Dimensions,
+  useWindowDimensions,
+  TouchableOpacity,
+  FlatList,
 } from "react-native";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { Padding, FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 
 export type CabeceraMobileType = {
   icon?: ImageSourcePropType;
   hora?: string;
   container?: ImageSourcePropType;
-
-  /** Style props */
-  cabeceraMobileMarginLeft?: number | string;
-  cabeceraMobileLeft?: number | string;
-  cabeceraMobileTop?: number | string;
-  cabeceraMobileMarginTop?: number | string;
 };
 
-const getStyleValue = (key: string, value: string | number | undefined) => {
-  if (value === undefined) return;
-  return { [key]: value === "unset" ? undefined : value };
-};
 const CabeceraMobile = ({
   icon,
   hora,
   container,
-  cabeceraMobileMarginLeft,
-  cabeceraMobileLeft,
-  cabeceraMobileTop,
-  cabeceraMobileMarginTop,
 }: CabeceraMobileType) => {
-  const cabeceraMobileStyle = useMemo(() => {
-    return {
-      ...getStyleValue("marginLeft", cabeceraMobileMarginLeft),
-      ...getStyleValue("left", cabeceraMobileLeft),
-      ...getStyleValue("top", cabeceraMobileTop),
-      ...getStyleValue("marginTop", cabeceraMobileMarginTop),
-    };
-  }, [
-    cabeceraMobileMarginLeft,
-    cabeceraMobileLeft,
-    cabeceraMobileTop,
-    cabeceraMobileMarginTop,
-  ]);
+  const { width, height } = useWindowDimensions();
+  const navigation = useNavigation();
+
+  // Calcula dimensiones responsivas
+  const headerHeight = Math.min(height * 0.2, 157);
+  const searchBarHeight = Math.min(height * 0.05, 32);
+  const iconSize = Math.min(width * 0.09, 36);
+  const logoSize = Math.min(width * 0.13, 55);
+
+  // Datos de los servicios
+  const serviciosData = [
+    { title: "Masaje con pindas", price: "$55" },
+    { title: "Masaje geotermal", price: "$60" },
+    { title: "Masaje podal", price: "$45" },
+    { title: "Masaje descontracturante", price: "$55" },
+    { title: "Masaje lomi lomi", price: "$55" },
+    { title: "Masaje relajante", price: "$50" },
+    { title: "Moment relax", price: "$110" },
+    { title: "Masaje craneo facial", price: "$35" },
+    { title: "Masaje cuatro manos", price: "$55" },
+  ];
+
+  const [searchText, setSearchText] = useState('');
+  const [filteredServices, setFilteredServices] = useState([]);
+
+  const handleSearchChange = (text) => {
+    setSearchText(text);
+    if (text) {
+      const filtered = serviciosData.filter(service =>
+        service.title.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredServices(filtered);
+    } else {
+      setFilteredServices([]);
+    }
+  };
+
+  const handleServiceSelect = (service) => {
+    navigation.navigate('DuracionMasaje', { service });
+    setSearchText('');
+    setFilteredServices([]);
+  };
+
+  // Nueva función para manejar la apertura del menú lateral
+  const handleMenuPress = () => {
+    navigation.dispatch(DrawerActions.toggleDrawer());
+  };
 
   return (
-    <View style={[styles.cabeceraMobile, cabeceraMobileStyle]}>
-      <View style={styles.cabeceraMobileInner}>
-        <View style={[styles.buscarWrapper, styles.containerFlexBox]}>
-          <Text style={styles.buscar}>Buscar...</Text>
+    <View style={[styles.cabeceraMobile, { height: headerHeight }]}>
+      {/* Barra de búsqueda */}
+      <View style={[styles.searchBarContainer, { height: headerHeight * 0.36 }]}>
+        <View style={[styles.buscarWrapper, { height: searchBarHeight }]}>
+          <TextInput
+            style={styles.buscar}
+            placeholder="Buscar..."
+            placeholderTextColor={Color.colorDimgray_100}
+            value={searchText}
+            onChangeText={handleSearchChange}
+          />
         </View>
-      </View>
-      <View style={[styles.topAppBar, styles.horaWifiFlexBox]}>
-        <View style={styles.leadingIcon}>
-          <View style={[styles.container, styles.containerFlexBox]}>
-            <Image style={styles.icon} resizeMode="cover" source={icon} />
+        {/* Lista de sugerencias */}
+        {filteredServices.length > 0 && (
+          <View style={styles.suggestionsContainer}>
+            {filteredServices.map((service, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.suggestionItem}
+                onPress={() => handleServiceSelect(service)}
+              >
+                <Text style={styles.suggestionText}>{service.title}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        </View>
+        )}
+      </View>
+
+      {/* Top App Bar */}
+      <View style={[styles.topAppBar, { height: headerHeight * 0.41 }]}>
+        <TouchableOpacity 
+          style={styles.leadingIcon}
+          onPress={handleMenuPress}
+        >
+          <View style={styles.container}>
+            <Image 
+              style={[styles.icon, { width: iconSize, height: iconSize }]} 
+              resizeMode="contain" 
+              source={icon} 
+            />
+          </View>
+        </TouchableOpacity>
+        
         <View style={styles.leadingIcon}>
-          <View style={[styles.container, styles.containerFlexBox]}>
-            <View style={[styles.stateLayer, styles.containerFlexBox]}>
+          <View style={styles.container}>
+            <View style={styles.stateLayer}>
               <Image
-                style={styles.logo1Icon}
-                resizeMode="cover"
+                style={[styles.logo1Icon, { width: logoSize, height: logoSize }]}
+                resizeMode="contain"
                 source={require("../assets/logo-12.png")}
               />
             </View>
           </View>
         </View>
+        
         <View style={styles.leadingIcon}>
-          <View style={[styles.container, styles.containerFlexBox]}>
-            <View style={[styles.stateLayer, styles.containerFlexBox]}>
+          <View style={styles.container}>
+            <View style={styles.stateLayer}>
               <Image
-                style={styles.combinedShapeIcon}
-                resizeMode="cover"
+                style={[styles.combinedShapeIcon, { 
+                  width: iconSize * 0.83, 
+                  height: iconSize * 0.83 
+                }]}
+                resizeMode="contain"
                 source={require("../assets/combinedshape.png")}
               />
             </View>
           </View>
         </View>
       </View>
-      
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  containerFlexBox: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+  cabeceraMobile: {
+    width: '100%',
+    backgroundColor: Color.grayWhite,
   },
-  horaWifiFlexBox: {
-    paddingHorizontal: Padding.p_mini,
-    justifyContent: "space-between",
-    flexDirection: "row",
-    alignItems: "center",
-    left: "0%",
-    right: "0%",
-    width: "100%",
-    position: "absolute",
-  },
-  buscar: {
-    fontSize: FontSize.bodyRegular_size,
-    fontFamily: FontFamily.m3BodyLarge,
-    color: Color.colorDimgray_100,
-    textAlign: "left",
-    width: 65,
+  searchBarContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: Color.colorGainsboro_400,
+    paddingHorizontal: Padding.p_18xl,
+    paddingVertical: Padding.p_2xs,
+    zIndex: 2, // Asegura que la lista de sugerencias aparezca sobre otros elementos
   },
   buscarWrapper: {
-    alignSelf: "stretch",
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Padding.p_mini,
+    backgroundColor: Color.colorGainsboro_100,
+    borderRadius: Border.br_11xl,
     shadowColor: "rgba(0, 0, 0, 0.07)",
-    shadowOffset: {
-      width: 0,
-      height: 100,
-    },
+    shadowOffset: { width: 0, height: 100 },
     shadowRadius: 80,
     elevation: 80,
     shadowOpacity: 1,
-    borderRadius: Border.br_11xl,
-    backgroundColor: Color.colorGainsboro_100,
-    height: 32,
-    paddingHorizontal: Padding.p_118xl,
-    paddingVertical: Padding.p_7xs,
+    width: '100%',
   },
-  cabeceraMobileInner: {
-    height: "36.31%",
-    top: "63.69%",
-    bottom: "0%",
-    paddingHorizontal: Padding.p_18xl,
-    paddingVertical: Padding.p_2xs,
-    justifyContent: "center",
-    alignItems: "center",
-    left: "0%",
-    right: "0%",
-    width: "100%",
-    backgroundColor: Color.colorGainsboro_400,
-    position: "absolute",
+  buscar: {
+    flex: 1,
+    fontSize: FontSize.bodyRegular_size,
+    fontFamily: FontFamily.m3BodyLarge,
+    color: Color.colorDimgray_100,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
-  icon: {
-    width: 36,
-    height: 36,
+  topAppBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: Color.grayBlack,
+    paddingHorizontal: Padding.p_mini,
+    paddingVertical: Padding.p_5xs,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  leadingIcon: {
+    aspectRatio: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     borderRadius: Border.br_81xl,
-    overflow: "hidden",
-  },
-  leadingIcon: {
-    width: 48,
-    height: 48,
-    justifyContent: "space-between",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  logo1Icon: {
-    width: 55,
-    height: 55,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   stateLayer: {
     padding: Padding.p_5xs,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon: {
+    resizeMode: 'contain',
+  },
+  logo1Icon: {
+    resizeMode: 'contain',
   },
   combinedShapeIcon: {
-    width: 30,
-    height: 30,
+    resizeMode: 'contain',
   },
-  topAppBar: {
-    height: "40.76%",
-    top: "0%",
-    bottom: "36.31%",
-    backgroundColor: Color.grayBlack,
-    paddingVertical: Padding.p_5xs,
-  },
-  hora: {
-    fontSize: FontSize.size_mini,
-    letterSpacing: 0,
-    lineHeight: 18,
-    fontWeight: "600",
-    fontFamily: FontFamily.robotoSlabSemiBold,
-    color: Color.grayBlack,
-    textAlign: "center",
-    width: 45,
-    transform: [
-      {
-        rotate: "-0.1deg",
-      },
-    ],
-  },
-  containerIcon: {
-    width: 67,
-    height: 12,
-  },
-  horaWifi: {
-    height: "22.93%",
-    top: "0%",
-    bottom: "77.07%",
-    paddingVertical: Padding.p_4xs,
-    backgroundColor: Color.colorGainsboro_400,
+  // Estilos para las sugerencias de búsqueda
+  suggestionsContainer: {
+    backgroundColor: Color.colorGainsboro_100,
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    zIndex: 3,
+    borderRadius: Border.br_11xl,
+    maxHeight: 150,
+    marginTop: 5,
     paddingHorizontal: Padding.p_mini,
   },
-  cabeceraMobile: {
-    marginLeft: -207,
-    top: 0,
-    left: "50%",
-    width: 414,
-    height: 157,
-    position: "absolute",
+  suggestionItem: {
+    paddingVertical: Padding.p_7xs,
+    borderBottomWidth: 1,
+    borderBottomColor: Color.colorGainsboro_400,
+  },
+  suggestionText: {
+    fontSize: FontSize.bodyRegular_size,
+    color: Color.colorDimgray_100,
   },
 });
 

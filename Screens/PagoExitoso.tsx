@@ -37,14 +37,12 @@ const styles = StyleSheet.create({
     shadowRadius:80,
     elevation:80,
     shadowOpacity:1,
-    borderRadius:Border.br_11xl,
     backgroundColor:Color.grayWhite,
     flex:1,
     width:"100%",
     height:896,
     overflow:"hidden",
-    alignItems:'center',
-    paddingTop:200
+    alignItems:'center'
   },
   pagoExitoso1:{
     fontSize:FontSize.size_11xl,

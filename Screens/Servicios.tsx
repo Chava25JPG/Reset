@@ -2,18 +2,15 @@ import * as React from "react";
 import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Component from "../components/Component";
-import FrameComponent from "../components/FrameComponent";
-import FrameComponent1 from "../components/FrameComponent1";
 import Button1 from "../components/Button1";
 import CabeceraMobile from "../components/CabeceraMobile";
-import { Padding, Border, Color } from "../GlobalStyles";
+import { Padding, Color } from "../GlobalStyles";
 
 const Servicios = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { category } = route.params || {};
 
-  // Servicios simulados
   const serviciosData = [
     { title: "Masaje con pindas", price: "$55" },
     { title: "Masaje geotermal", price: "$60" },
@@ -38,49 +35,46 @@ const Servicios = () => {
         container={require("../assets/container2.png")}
       />
 
-      <View style={styles.searchContainer}>
-        <Component />
-      </View>
-
-      <View style={styles.framesContainer}>
-        <FrameComponent />
-        <FrameComponent1 />
-      </View>
-
-      <View style={[styles.dropdownTrigger, styles.dropdownFlexBox]}>
-        <Button1
-          iconOnly={false}
-          outline={false}
-          size="large"
-          state="normal"
-          type="primary"
-          icon={require("../assets/icon.png")}
-          icon2={require("../assets/icon2.png")}
-          iconLeft={false}
-          iconRight={false}
-          buttonAlignSelf="unset"
-        />
-        <View style={[styles.dropdownToggle, styles.dropdownFlexBox]}>
-          <Text style={styles.categoryText}>{category || "Categoría"}</Text>
+      <View style={styles.contentContainer}>
+        <View style={styles.searchContainer}>
+          
         </View>
-      </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.servicesGrid}>
-          {serviciosData.map((item, index) => (
-            <TouchableOpacity key={index} style={styles.serviceCard} onPress={() => handleServicePress(item)}>
-              <View style={styles.placeholderImage} />
-              <Text style={styles.serviceTitle}>{item.title}</Text>
-              <Text style={styles.servicePrice}>{item.price}</Text>
-            </TouchableOpacity>
-          ))}
+        <View style={styles.categoryContainer}>
+          <TouchableOpacity style={styles.categoryButton}>
+            <Text style={styles.categoryText}>{category || "Todas las categorías"}</Text>
+            <View style={styles.categoryIndicator} />
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent} 
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.servicesGrid}>
+            {serviciosData.map((item, index) => (
+              <TouchableOpacity 
+                key={index} 
+                style={styles.serviceCard} 
+                onPress={() => handleServicePress(item)}
+              >
+                <View style={styles.placeholderImage} />
+                <Text style={styles.serviceTitle}>{item.title}</Text>
+                <Text style={styles.servicePrice}>{item.price}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  servicios: {
+    flex: 1,
+    backgroundColor: Color.grayWhite,
+  },
   serviciosShadowBox: {
     shadowOpacity: 1,
     elevation: 80,
@@ -89,48 +83,49 @@ const styles = StyleSheet.create({
       width: 0,
       height: 100,
     },
-    shadowColor: "rgba(0, 0, 0, 0.07)",
+    shadowColor: "rgb(252, 0, 0)",
   },
-  dropdownFlexBox: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  servicios: {
-    borderRadius: 0,
-    backgroundColor: Color.grayWhite,
+  contentContainer: {
     flex: 1,
-    width: "100%",
-    height: "100%",
-    overflow: "hidden",
+    paddingTop: 10,
   },
   searchContainer: {
-    paddingTop: 20,
     paddingHorizontal: 20,
+    marginBottom: 15,
   },
-  framesContainer: {
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  dropdownTrigger: {
-    alignSelf: "center",
-    marginTop: 20,
+  categoryContainer: {
+    paddingHorizontal: 20,
     marginBottom: 20,
   },
-  dropdownToggle: {
-    borderTopRightRadius: Border.br_8xs_8,
-    borderBottomRightRadius: Border.br_8xs_8,
+  categoryButton: {
     backgroundColor: Color.yellow600,
-    borderColor: Color.yellow600,
-    borderWidth: 1,
-    justifyContent: "center",
-    paddingHorizontal: Padding.p_xs,
-    paddingVertical: Padding.p_5xs,
-    marginLeft: 10,
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
   },
   categoryText: {
-    fontSize: 14,
-    fontWeight: "bold",
+    fontSize: 16,
+    fontWeight: "600",
     color: "#000",
+    textAlign: 'center',
+  },
+  categoryIndicator: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderTopWidth: 8,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#000',
+    marginLeft: 10,
+    transform: [{ rotate: '180deg' }],
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -144,7 +139,7 @@ const styles = StyleSheet.create({
   serviceCard: {
     width: "30%",
     borderRadius: 10,
-    backgroundColor: "rgba(219, 219, 219, 0.1)",
+    backgroundColor: "rgba(255, 255, 255, 0.83)",
     marginBottom: 20,
     alignItems: "center",
     padding: 10,

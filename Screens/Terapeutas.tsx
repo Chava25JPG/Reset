@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
     shadowRadius: 80,
     elevation: 80,
     shadowOpacity: 1,
-    borderRadius: Border.br_11xl,
     backgroundColor: Color.grayWhite,
     flex: 1,
     width: "100%",

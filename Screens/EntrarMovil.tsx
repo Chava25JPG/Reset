@@ -1,4 +1,3 @@
-// EntrarMovil.js
 import React, { useState } from "react";
 import {
   Image,
@@ -8,12 +7,10 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  TextInput
 } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import InputBase from "../components/InputBase";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
-
-// Importar Firebase Auth
 import auth from '@react-native-firebase/auth';
 
 const EntrarMovil = () => {
@@ -29,11 +26,9 @@ const EntrarMovil = () => {
     }
 
     try {
-      // Iniciar sesión con Firebase Auth
       await auth().signInWithEmailAndPassword(correo, contraseña);
       Alert.alert('Inicio de sesión exitoso');
-      // Navegar a la pantalla principal de la aplicación
-      navigation.navigate('Home'); // Asegúrate de que 'Home' esté definida en tu stack de navegación
+      navigation.navigate('Home');
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
         Alert.alert('Error', 'Usuario no encontrado.');
@@ -49,131 +44,125 @@ const EntrarMovil = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.entrarMovil}>
+    <View style={styles.container}>
+      {/* Imagen de fondo */}
+      <Image
+        style={styles.backgroundImage}
+        source={require("../assets/9145354-1.png")}
+        resizeMode="cover"
+      />
+
+      {/* Tarjeta semi-transparente */}
+      <View style={styles.overlayCard}>
         <Image
-          style={styles.icon}
-          resizeMode="cover"
-          source={require("../assets/9145354-1.png")}
-        />
-        <View style={styles.entrarMovilChild} />
-        <Image
-          style={styles.logo1Icon}
-          resizeMode="cover"
+          style={styles.logo}
+          resizeMode="contain"
           source={require("../assets/logo-11.png")}
         />
+        <Text style={styles.title}>Entrar</Text>
 
-        {/* Formulario de Inicio de Sesión */}
-        <View style={styles.mainContent}>
-          <Text style={styles.titulo}>Entrar</Text>
+        <View style={styles.formContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Correo"
+            placeholderTextColor="#666"
+            value={correo}
+            onChangeText={setCorreo}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Contraseña"
+            placeholderTextColor="#666"
+            value={contraseña}
+            onChangeText={setContraseña}
+            secureTextEntry
+          />
 
-          <View style={styles.formContainer}>
-            <InputBase
-              placeholderText="Correo"
-              value={correo}
-              onChangeText={setCorreo}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            <InputBase
-              placeholderText="Contraseña"
-              value={contraseña}
-              onChangeText={setContraseña}
-              secureTextEntry
-            />
-
-            {/* Botón de Inicio de Sesión */}
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>Entrar</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Texto de Política de Privacidad y Términos de Uso */}
-          <Text style={styles.entrar}>
-            <Text style={styles.alIniciarSesion}>{`Al iniciar sesión o registrarte, aceptas la `}</Text>
-            <Text style={styles.politicaDePrivacidad}>Política de privacidad</Text>
-            <Text style={styles.alIniciarSesion}>{` y los `}</Text>
-            <Text style={styles.politicaDePrivacidad}>{`Términos de uso `}</Text>
-            <Text style={styles.alIniciarSesion}>de RESET.</Text>
-          </Text>
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>Entrar</Text>
+          </TouchableOpacity>
         </View>
+
+        <Text style={styles.footerText}>
+          Al iniciar sesión o registrarte, aceptas la{" "}
+          <Text style={styles.linkText}>Política de privacidad</Text>
+          {" "}y los{" "}
+          <Text style={styles.linkText}>Términos de uso</Text>{" "}de RESET.
+        </Text>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    backgroundColor: Color.grayWhite,
-  },
-  entrarMovil: {
+  container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: Color.grayWhite,
   },
-  icon: {
+  backgroundImage: {
     position: "absolute",
     width: "100%",
-    height: "100%",
-    top: 0,
-    left: 0,
+    height: "100%"
   },
-  entrarMovilChild: {
-    position: "absolute",
-    top: 88,
-    borderRadius: Border.br_21xl,
-    backgroundColor: Color.colorGray_200,
-    width: 379,
-    height: 709,
-    left: "50%",
-    transform: [{ translateX: -379 / 2 }],
+  overlayCard: {
+    marginTop: 100,
+    marginHorizontal: 20,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    borderRadius: 25,
+    alignItems: "center",
+    paddingVertical: 40,
+    paddingHorizontal: 20
   },
-  logo1Icon: {
-    width: 135,
-    height: 135,
-    marginTop: 127,
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20
   },
-  mainContent: {
-    width: '90%',
-    alignItems: 'center',
-  },
-  titulo: {
-    fontSize: 40,
+  title: {
+    fontSize: 30,
     color: Color.grayBlack,
-    textAlign: "center",
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    marginTop: 20,
+    fontFamily: FontFamily.robotoBold,
+    fontWeight: "700",
+    marginBottom: 30,
+    textAlign: "center"
   },
   formContainer: {
     width: '100%',
-    marginTop: 20,
+    marginBottom: 20
+  },
+  input: {
+    backgroundColor: '#FFF',
+    borderColor: '#CCC',
+    borderWidth: 1,
+    borderRadius: 8,
+    height: 50,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    color: '#000'
   },
   loginButton: {
-    backgroundColor: '#779341',
+    backgroundColor: "#779341",
     paddingVertical: 15,
     borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
+    alignItems: 'center'
   },
   loginButtonText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
-  entrar: {
+  footerText: {
     fontSize: FontSize.bodySmall_size,
     textAlign: "center",
     marginTop: 20,
+    color: Color.grayBlack
   },
-  alIniciarSesion: {
-    color: Color.grayBlack,
-  },
-  politicaDePrivacidad: {
+  linkText: {
     color: Color.colorOlive,
-    textDecorationLine: 'underline',
-  },
+    textDecorationLine: 'underline'
+  }
 });
 
 export default EntrarMovil;

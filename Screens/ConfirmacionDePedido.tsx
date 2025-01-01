@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Image, StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
+import { 
+  StyleSheet, 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  Alert,
+  SafeAreaView
+} from "react-native";
 import GroupComponent from "../components/GroupComponent";
 import CabeceraMobile from "../components/CabeceraMobile";
 import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
@@ -13,11 +20,10 @@ const ConfirmacionDePedido = () => {
   const { category, service, duration, gender, extras, terapeuta, date } = route.params || {};
 
   const handleConfirm = async () => {
-    // Simular pago y guardar cita en Firestore
     try {
       const currentUser = auth().currentUser;
       const uid = currentUser ? currentUser.uid : "usuario_anonimo";
-
+      
       await firestore().collection('citas').add({
         uid,
         category,
@@ -30,7 +36,7 @@ const ConfirmacionDePedido = () => {
         date,
         createdAt: firestore.FieldValue.serverTimestamp(),
       });
-
+      
       Alert.alert("Pago simulado exitoso", "Su cita ha sido registrada.");
       navigation.navigate("PagoExitoso");
     } catch (error) {
@@ -40,77 +46,87 @@ const ConfirmacionDePedido = () => {
   };
 
   return (
-    <View style={styles.confirmacionDePedido}>
-      <CabeceraMobile
-        icon={require("../assets/icon4.png")}
-        hora="09:41"
-        container={require("../assets/container.png")}
-      />
-
-      <Text style={[styles.momentoRelajante, styles.textTypo]}>
-        {service?.title || "Momento Relajante"}
-      </Text>
-      <Text style={[styles.text, styles.textTypo]}>{service?.price || "$0"}</Text>
-
-      <Text style={{marginTop:100, textAlign:'center', fontFamily: FontFamily.robotoBold}}>
-        Confirma tu pedido y se simulará el pago, guardando la cita.
-      </Text>
-
-      <TouchableOpacity onPress={handleConfirm} style={styles.confirmBtn}>
-        <Text style={styles.confirmBtnText}>CONFIRMAR PAGO (SIMULADO)</Text>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.confirmacionDePedido}>
+        <CabeceraMobile
+          icon={require("../assets/icon4.png")}
+          hora="09:41"
+          container={require("../assets/container.png")}
+        />
+        
+        <View style={styles.contentContainer}>
+          <Text style={styles.momentoRelajante}>
+            {service?.title || "Momento Relajante"}
+          </Text>
+          
+          <Text style={styles.price}>
+            {service?.price || "$0"}
+          </Text>
+          
+          <Text style={styles.confirmationText}>
+            Confirma tu pedido y se simulará el pago, guardando la cita.
+          </Text>
+          
+          <TouchableOpacity 
+            onPress={handleConfirm} 
+            style={styles.confirmBtn}
+          >
+            <Text style={styles.confirmBtnText}>
+              CONFIRMAR PAGO (SIMULADO)
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  textTypo: {
-    textAlign: "center",
-    fontFamily: FontFamily.robotoBold,
-    fontWeight: "700",
-    position: "absolute",
-    left:'50%',
-    marginLeft:-100
+  container: {
+    flex: 1,
   },
   confirmacionDePedido: {
-    shadowColor: "rgba(0, 0, 0, 0.07)",
-    shadowOffset: {width: 0,height: 100},
-    shadowRadius: 80,
-    elevation: 80,
-    borderRadius: Border.br_11xl,
+    flex: 1,
     backgroundColor: Color.grayWhite,
-    flex:1,
-    width:"100%",
-    height:896,
-    overflow:"hidden",
-    alignItems:'center',
-    paddingTop:200,
-    shadowOpacity:1
+    width: "100%",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   momentoRelajante: {
-    top:100,
     fontSize: FontSize.size_11xl,
-    width:200,
+    fontFamily: FontFamily.robotoBold,
     color: Color.grayBlack,
+    textAlign: "center",
+    marginTop: 20,
   },
-  text: {
-    top:180,
+  price: {
     fontSize: FontSize.size_13xl,
-    width:200,
+    fontFamily: FontFamily.robotoBold,
     color: Color.grayBlack,
+    textAlign: "center",
+    marginTop: 20,
+  },
+  confirmationText: {
+    fontFamily: FontFamily.robotoBold,
+    textAlign: 'center',
+    marginTop: 30,
   },
   confirmBtn: {
     backgroundColor: Color.colorGoldenrod,
     borderRadius: Border.br_3xs,
     width: 250,
-    height:40,
-    justifyContent:'center',
-    alignItems:'center',
-    marginTop:50
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
   },
-  confirmBtnText:{
+  confirmBtnText: {
     color: Color.colorSnow,
-    fontFamily: FontFamily.robotoBold
+    fontFamily: FontFamily.robotoBold,
   }
 });
 
